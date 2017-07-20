@@ -1,4 +1,13 @@
+import path from "path";
+
 import { buildActionCreator } from "./radux";
+
+const extractSimpleType = type => {
+  if (type.includes("/")) {
+    return path.basename(type);
+  }
+  return type;
+};
 
 export default class Reducer {
   constructor(name, initialState = {}) {
@@ -9,10 +18,14 @@ export default class Reducer {
   }
 
   addAction(type, reduceFunction) {
-    const fullActionName = this.getFullActionType(type);
+    type = extractSimpleType(type);
 
-    this.actionCreators[fullActionName] = buildActionCreator(fullActionName);
-    this.reduceFunctions[fullActionName] = reduceFunction;
+    if (!this.actionCreators[this.name]) {
+      this.actionCreators[this.name] = {};
+    }
+
+    this.actionCreators[this.name][type] = buildActionCreator(fullActionName);
+    this.reduceFunctions[this.name][type] = reduceFunction;
   }
 
   addActions(actions) {
@@ -21,17 +34,12 @@ export default class Reducer {
     );
   }
 
-  getFullActionType(actionType) {
-    if (actionType.includes(this.name + "/")) return actionType;
-    return this.name + "/" + actionType;
-  }
-
   getReduxReducer() {
     return (state = this.initialState, action = {}) => {
-      const actionType = this.getFullActionType(action.type);
+      const type = extractSimpleType(action.type);
 
-      if (this.reduceFunctions[actionType])
-        return { ...state, ...this.reduceFunctions[actionType] };
+      if (this.reduceFunctions[this.name][type])
+        return { ...state, ...this.reduceFunctions[this.name][type] };
 
       return state;
     };
