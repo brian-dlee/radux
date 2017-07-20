@@ -9,6 +9,14 @@ const extractSimpleType = type => {
   return type;
 };
 
+const getFullActionName = (name, type) => {
+  if (type.includes("/")) {
+    return type;
+  }
+
+  return name + "/" + type;
+};
+
 export default class Reducer {
   constructor(name, initialState = {}) {
     this.name = name;
@@ -18,14 +26,17 @@ export default class Reducer {
   }
 
   addAction(type, reduceFunction) {
-    type = extractSimpleType(type);
+    const fullActionName = getFullActionName(this.name, type);
+    const simpleActionName = extractSimpleType(type);
 
     if (!this.actionCreators[this.name]) {
       this.actionCreators[this.name] = {};
     }
 
-    this.actionCreators[this.name][type] = buildActionCreator(fullActionName);
-    this.reduceFunctions[this.name][type] = reduceFunction;
+    this.actionCreators[this.name][simpleActionName] = buildActionCreator(
+      fullActionName
+    );
+    this.reduceFunctions[this.name][simpleActionName] = reduceFunction;
   }
 
   addActions(actions) {

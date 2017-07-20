@@ -1,6 +1,6 @@
 {
   "name": "radux",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "description": "Helper library for Redux that helps reduce the repitiveness of Redux configuration for React",
   "main": "./lib/index.js",
   "scripts": {
