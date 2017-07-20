@@ -54,10 +54,15 @@ export default class Reducer {
 
   getReduxReducer() {
     return (state = this.initialState, action = {}) => {
-      const type = extractSimpleType(action.type);
+      // const type = extractSimpleType(action.type);
+      //
+      // if (this.reduceFunctions[this.name][type])
+      //   return { ...state, ...this.reduceFunctions[this.name][type]() };
 
-      if (this.reduceFunctions[this.name][type])
-        return { ...state, ...this.reduceFunctions[this.name][type] };
+      const type = getFullActionName(this.name, action.type);
+
+      if (this.reduceFunctions[type])
+        return { ...state, ...this.reduceFunctions[type]() };
 
       return state;
     };
