@@ -1,5 +1,4 @@
 import { connect as reduxConnect } from "react-redux";
-import { bindActionCreators } from "redux";
 
 import { BaseFilter, IncludeFilter, ExcludeFilter } from "./state-filters";
 import { buildDispatchToPropsMap, buildStateToPropsMap } from "./radux";
@@ -28,7 +27,7 @@ export default class StateConnection {
     if (filter instanceof BaseFilter) {
       this.stateFilter = filter;
     } else if (type === "include") {
-      this.stateFilter = new Include(filter);
+      this.stateFilter = new IncludeFilter(filter);
     } else if (type === "exclude") {
       this.stateFilter = new ExcludeFilter(filter);
     } else {
@@ -52,7 +51,7 @@ export default class StateConnection {
       console.error(
         `useReducer expects a Reducer to be passed in. ${type(
           reducer
-        )} recieved.`
+        )} received.`
       );
     }
 

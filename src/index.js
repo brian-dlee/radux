@@ -1,5 +1,5 @@
 import {
-  connectState,
+  stateConnection,
   registerGlobalActionCreators,
   registerReducer,
   registerReducers,

@@ -1,4 +1,4 @@
-import { combineReducers } from "redux";
+import { bindActionCreators, combineReducers } from "redux";
 import Reducer from "./reducer";
 import StateConnection from "./state-connection";
 
@@ -34,7 +34,10 @@ const getReducers = () => {
   return combineReducers(reducers);
 };
 
-const buildActionCreator = data => ({ type: fullActionName, ...data });
+const buildActionCreator = (actionName, data) => ({
+  type: actionName,
+  ...data
+});
 
 const buildDispatchToPropsMap = (actionCreators = {}) => dispatch => ({
   actions: bindActionCreators(

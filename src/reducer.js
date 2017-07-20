@@ -9,9 +9,12 @@ export default class Reducer {
   }
 
   addAction(type, reduceFunction) {
-    const fullActionName = this.getFullActionType();
+    const fullActionName = this.getFullActionType(type);
 
-    this.actionCreators[fullActionName] = buildActionCreator(data);
+    this.actionCreators[fullActionName] = buildActionCreator(
+      fullActionName,
+      data
+    );
     this.reduceFunctions[fullActionName] = reduceFunction;
   }
 
@@ -21,8 +24,8 @@ export default class Reducer {
   }
 
   getReduxReducer() {
-    (state = initialState, action = {}) => {
-      const actionType = getFullActionType(action.type);
+    return (state = this.initialState, action = {}) => {
+      const actionType = this.getFullActionType(action.type);
 
       if (this.reduceFunctions[actionType])
         return { ...state, ...this.reduceFunctions[actionType] };
