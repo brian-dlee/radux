@@ -33,6 +33,10 @@ export default class Reducer {
       this.actionCreators[this.name] = {};
     }
 
+    if (!this.reduceFunctions[this.name]) {
+      this.reduceFunctions[this.name] = {};
+    }
+
     this.actionCreators[this.name][simpleActionName] = buildActionCreator(
       fullActionName
     );
