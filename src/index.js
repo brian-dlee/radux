@@ -12,7 +12,7 @@ import Reducer from "./reducer";
 export default {
   stateConnection,
   registerGlobalActionCreators,
-  registereReducer,
+  registerReducer,
   registerReducers,
   getReducers
 };
