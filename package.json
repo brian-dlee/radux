@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "precommit": "lint-staged && babel -d lib/ src/"
+    "transpile": "babel -d lib/ src/",
+    "precommit": "lint-staged && npm run-script transpile"
   },
   "repository": {
     "type": "git",
