@@ -23,12 +23,15 @@ export default class StateConnection {
     return this;
   }
 
-  setStateFilter(filter, exclude = false) {
+  setStateFilter(filter, type = null) {
     if (filter instanceof BaseFilter) {
       this.stateFilter = filter;
+    } else if (type === "include") {
+      this.stateFilter = new Include(filter);
+    } else if (type === "exclude") {
+      this.stateFilter = new ExcludeFilter(filter);
     } else {
-      const filterType = exclude ? ExcludeFilter : IncludeFilter;
-      this.stateFilter = new filterType(filter);
+      this.stateFilter = new BaseFilter(filter);
     }
 
     return this;

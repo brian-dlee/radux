@@ -48,8 +48,8 @@ export {
   buildActionCreator,
   buildDispatchToPropsMap,
   buildStateToPropsMap,
-  stateConnection,
   getReducers,
   registerGlobalActionCreators,
-  registerReducer
+  registerReducer,
+  stateConnection
 };
