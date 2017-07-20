@@ -1,11 +1,9 @@
-import { connect as reduxConnect } from "react-redux";
-import { bindActionCreators } from "redux";
+import { registerGlobalActionCreators } from "./reduxion";
+import stateFilters from "./state-filters";
+import Connection from "./connection";
 
-import { IncludeFilter, ExcludeFilter } from "./lib/state-filters";
-import reduxion from "./lib/reduxion";
+export default {
+  registerGlobalActionCreators
+};
 
-const include = keys => new IncludeFilter(keys);
-const exclude = keys => new ExcludeFilter(keys);
-
-export default reduxion;
-export { include, exclude };
+export { Connection, stateFilters };

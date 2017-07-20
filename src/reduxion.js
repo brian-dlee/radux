@@ -13,21 +13,8 @@ const buildDispatchToPropsMap = (actionCreators = {}) => dispatch => ({
 const buildStateToPropsMap = filter => state =>
   filter ? filter.apply(state) : state;
 
-const connect = (...args) => {
-  const Component = args.pop();
-  const [mapStateToPropsArg, mapDispatchToPropsArg, mergeProps, options] = args;
-
-  return reduxConnect(
-    buildStateToPropsMap(mapStateToPropsArg),
-    buildDispatchToPropsMap(mapDispatchToPropsArg),
-    mergeProps,
-    options
-  )(Component);
-};
-
-export default {
+export {
   registerGlobalActionCreators,
-  buildStateToPropsMap,
   buildDispatchToPropsMap,
-  connect
+  buildStateToPropsMap
 };

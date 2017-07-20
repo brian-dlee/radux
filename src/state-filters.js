@@ -24,4 +24,12 @@ class ExcludeFilter extends BaseFilter {
   }
 }
 
-export { IncludeFilter, ExcludeFilter };
+const include = keys => new IncludeFilter(keys);
+const exclude = keys => new ExcludeFilter(keys);
+
+export default {
+  include,
+  exclude
+};
+
+export { BaseFilter, IncludeFilter, ExcludeFilter };
