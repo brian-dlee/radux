@@ -22,6 +22,8 @@ const registerReducer = reducer => {
   this.registeredReducers = { ...this.registeredReducers, ...{ reducer } };
 };
 
+const registerReducers = reducers => reducers.forEach(r => registerReducer(r));
+
 const getReducers = () => {
   const reducers = {};
 
@@ -51,5 +53,6 @@ export {
   getReducers,
   registerGlobalActionCreators,
   registerReducer,
+  registerReducers,
   stateConnection
 };

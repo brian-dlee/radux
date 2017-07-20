@@ -2,6 +2,7 @@ import {
   connectState,
   registerGlobalActionCreators,
   registerReducer,
+  registerReducers,
   getReducers
 } from "./radux";
 import stateFilters from "./state-filters";
@@ -12,6 +13,7 @@ export default {
   stateConnection,
   registerGlobalActionCreators,
   registereReducer,
+  registerReducers,
   getReducers
 };
 
