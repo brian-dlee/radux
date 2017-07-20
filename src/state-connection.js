@@ -8,8 +8,8 @@ export default class StateConnection {
   constructor(Component = null) {
     this.Component = Component;
     this.stateFilter = null;
-    this.mergeProps = null;
-    this.options = null;
+    this.mergeProps = {};
+    this.options = {};
     this.actionCreators = {};
   }
 
