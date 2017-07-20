@@ -34,7 +34,7 @@ const getReducers = () => {
   const reducers = {};
 
   Object.keys(this.registeredReducers).map(key => {
-    reducers[key] = this.registeredReducers.getReduxReducer();
+    reducers[key] = this.registeredReducers[key].getReduxReducer();
   });
 
   return combineReducers(reducers);
