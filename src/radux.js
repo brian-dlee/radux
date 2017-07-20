@@ -6,6 +6,7 @@ let globalActionCreators = {};
 let registeredReducers = {};
 
 const stateConnection = Component => new StateConnection(Component);
+const reducer = (name, initialState = {}) => new Reducer(name, initialState);
 
 const registerGlobalActionCreators = mapDispatchToProps =>
   (globalActionCreators = { ...globalActionCreators, ...mapDispatchToProps });
@@ -54,6 +55,7 @@ export {
   buildDispatchToPropsMap,
   buildStateToPropsMap,
   getReducers,
+  reducer,
   registerGlobalActionCreators,
   registerReducer,
   registerReducers,
