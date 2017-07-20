@@ -1,0 +1,43 @@
+{
+  "name": "reduxion",
+  "version": "0.1.0",
+  "description": "Helper library for Redux that helps reduce the repitiveness of Redux configuration for React",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "precommit": "lint-staged"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brian-dlee/reduxion.git"
+  },
+  "keywords": [
+    "redux",
+    "react",
+    "boilerplate",
+    "helper"
+  ],
+  "author": "Brian Lee <briandl92391@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/brian-dlee/reduxion/issues"
+  },
+  "homepage": "https://github.com/brian-dlee/reduxion#readme",
+  "dependencies": {
+    "react-redux": "^5.0.5",
+    "redux": "^3.7.2"
+  },
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-cli": "^6.24.1",
+    "husky": "^0.14.3",
+    "prettier": "^1.5.3"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write",
+      "babel -d lib/ src/",
+      "git add"
+    ]
+  }
+}
