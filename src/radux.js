@@ -34,7 +34,7 @@ const getReducers = () => {
   return combineReducers(reducers);
 };
 
-const buildActionCreator = (actionName, data) => ({
+const buildActionCreator = actionName => data => ({
   type: actionName,
   ...data
 });

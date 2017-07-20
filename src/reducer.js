@@ -11,10 +11,7 @@ export default class Reducer {
   addAction(type, reduceFunction) {
     const fullActionName = this.getFullActionType(type);
 
-    this.actionCreators[fullActionName] = buildActionCreator(
-      fullActionName,
-      data
-    );
+    this.actionCreators[fullActionName] = buildActionCreator(fullActionName);
     this.reduceFunctions[fullActionName] = reduceFunction;
   }
 
