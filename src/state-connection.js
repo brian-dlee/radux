@@ -3,6 +3,7 @@ import { bindActionCreators } from "redux";
 
 import { BaseFilter, IncludeFilter, ExcludeFilter } from "./state-filters";
 import { buildDispatchToPropsMap, buildStateToPropsMap } from "./radux";
+import Reducer from "./reducer";
 
 export default class StateConnection {
   constructor(Component = null) {
@@ -44,5 +45,17 @@ export default class StateConnection {
       this.mergeProps,
       this.options
     )(this.Component || Component);
+  }
+
+  useReducer(reducer) {
+    if (!reducer instanceof Reducer) {
+      console.error(
+        `useReducer expects a Reducer to be passed in. ${type(
+          reducer
+        )} recieved.`
+      );
+    }
+
+    this.addActionCreators(reducer.actionCreators);
   }
 }
