@@ -27,20 +27,23 @@ export default class Reducer {
 
   addAction(type, reduceFunction) {
     const fullActionName = getFullActionName(this.name, type);
-    const simpleActionName = extractSimpleType(type);
+    // const simpleActionName = extractSimpleType(type);
 
-    if (!this.actionCreators[this.name]) {
-      this.actionCreators[this.name] = {};
-    }
+    // if (!this.actionCreators[this.name]) {
+    //   this.actionCreators[this.name] = {};
+    // }
+    //
+    // if (!this.reduceFunctions[this.name]) {
+    //   this.reduceFunctions[this.name] = {};
+    // }
 
-    if (!this.reduceFunctions[this.name]) {
-      this.reduceFunctions[this.name] = {};
-    }
+    // this.actionCreators[this.name][simpleActionName] = buildActionCreator(
+    //   fullActionName
+    // );
+    // this.reduceFunctions[this.name][simpleActionName] = reduceFunction;
 
-    this.actionCreators[this.name][simpleActionName] = buildActionCreator(
-      fullActionName
-    );
-    this.reduceFunctions[this.name][simpleActionName] = reduceFunction;
+    this.actionCreators[fullActionName] = buildActionCreator(fullActionName);
+    this.reduceFunctions[fullActionName] = reduceFunction;
   }
 
   addActions(actions) {

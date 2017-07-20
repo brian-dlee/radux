@@ -5,6 +5,25 @@ import StateConnection from "./state-connection";
 let globalActionCreators = {};
 let registeredReducers = {};
 
+const convertDirectoryNotationToObject = obj => {
+  const newObj = {};
+
+  Object.keys(obj).forEach(key => {
+    if (key.includes("/")) {
+      const parts = key.split("/");
+      const first = parts.unshift();
+
+      newObj[first] = convertDirectoryNotationToObject({
+        [parts.join("/")]: obj[key]
+      });
+    } else {
+      newObj[key] = obj[key];
+    }
+  });
+
+  return newObj;
+};
+
 const stateConnection = (Component, params) =>
   new StateConnection(Component, params);
 const reducer = (name, initialState = {}) => new Reducer(name, initialState);
@@ -47,7 +66,10 @@ const buildActionCreator = actionName => data => ({
 
 const buildDispatchToPropsMap = (actionCreators = {}) => dispatch => ({
   actions: bindActionCreators(
-    { ...globalActionCreators, ...actionCreators },
+    {
+      ...convertDirectoryNotationToObject(globalActionCreators),
+      ...convertDirectoryNotationToObject(actionCreators)
+    },
     dispatch
   )
 });
