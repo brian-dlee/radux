@@ -4,7 +4,7 @@ import { bindActionCreators } from "redux";
 import { BaseFilter, IncludeFilter, ExcludeFilter } from "./state-filters";
 import { buildDispatchToPropsMap, buildStateToPropsMap } from "./radux";
 
-export default class Connection {
+export default class StateConnection {
   constructor(Component) {
     this.Component;
     this.stateFilter = null;
