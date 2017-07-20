@@ -15,6 +15,12 @@ export default class Reducer {
     this.reduceFunctions[fullActionName] = reduceFunction;
   }
 
+  addActions(actions) {
+    Object.keys(actions).forEach(action =>
+      this.addAction(action, actions[action])
+    );
+  }
+
   getFullActionType(actionType) {
     if (actionType.includes(this.name + "/")) return actionType;
     return this.name + "/" + actionType;

@@ -5,12 +5,12 @@ import { buildDispatchToPropsMap, buildStateToPropsMap } from "./radux";
 import Reducer from "./reducer";
 
 export default class StateConnection {
-  constructor(Component = null) {
+  constructor(Component = null, params = {}) {
     this.Component = Component;
-    this.stateFilter = null;
-    this.mergeProps = {};
-    this.options = {};
-    this.actionCreators = {};
+    this.stateFilter = params.stateFilter || null;
+    this.mergeProps = params.mergeProps || {};
+    this.options = params.options || {};
+    this.actionCreators = params.actionCreators || {};
   }
 
   setOptions(options) {
