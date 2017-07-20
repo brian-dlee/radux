@@ -2,7 +2,7 @@ import { connect as reduxConnect } from "react-redux";
 import { bindActionCreators } from "redux";
 
 import { BaseFilter, IncludeFilter, ExcludeFilter } from "./state-filters";
-import { buildDispatchToPropsMap, buildStateToPropsMap } from "./reduxion";
+import { buildDispatchToPropsMap, buildStateToPropsMap } from "./radux";
 
 export default class Connection {
   constructor(Component) {

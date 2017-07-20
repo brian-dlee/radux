@@ -1,4 +1,4 @@
-import { buildActionCreator } from "./reduxion";
+import { buildActionCreator } from "./radux";
 
 export default class Reducer {
   constructor(name, initialState = {}) {

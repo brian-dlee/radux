@@ -2,7 +2,7 @@ import {
   registerGlobalActionCreators,
   registerReducer,
   getReducers
-} from "./reduxion";
+} from "./radux";
 import stateFilters from "./state-filters";
 import Connection from "./connection";
 import Reducer from "./reducer";
