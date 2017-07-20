@@ -11,7 +11,7 @@ const convertDirectoryNotationToObject = obj => {
   Object.keys(obj).forEach(key => {
     if (key.includes("/")) {
       const parts = key.split("/");
-      const first = parts.unshift();
+      const first = parts.shift();
 
       newObj[first] = convertDirectoryNotationToObject({
         [parts.join("/")]: obj[key]
