@@ -5,7 +5,7 @@ import StateConnection from "./state-connection";
 let globalActionCreators = {};
 let registeredReducers = {};
 
-const connectState = Component => new StateConnection(Component);
+const stateConnection = Component => new StateConnection(Component);
 
 const registerGlobalActionCreators = mapDispatchToProps =>
   (globalActionCreators = { ...globalActionCreators, ...mapDispatchToProps });
@@ -48,7 +48,7 @@ export {
   buildActionCreator,
   buildDispatchToPropsMap,
   buildStateToPropsMap,
-  connectState,
+  stateConnection,
   getReducers,
   registerGlobalActionCreators,
   registerReducer

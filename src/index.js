@@ -9,7 +9,7 @@ import StateConnection from "./state-connection";
 import Reducer from "./reducer";
 
 export default {
-  connectState,
+  stateConnection,
   registerGlobalActionCreators,
   registereReducer,
   getReducers

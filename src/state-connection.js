@@ -5,8 +5,8 @@ import { BaseFilter, IncludeFilter, ExcludeFilter } from "./state-filters";
 import { buildDispatchToPropsMap, buildStateToPropsMap } from "./radux";
 
 export default class StateConnection {
-  constructor(Component) {
-    this.Component;
+  constructor(Component = null) {
+    this.Component = Component;
     this.stateFilter = null;
     this.mergeProps = null;
     this.options = null;
@@ -34,12 +34,12 @@ export default class StateConnection {
     return this;
   }
 
-  connect() {
+  connectTo(Component) {
     return reduxConnect(
       buildStateToPropsMap(this.stateFilter),
       buildDispatchToPropsMap(this.actionCreators),
       this.mergeProps,
       this.options
-    )(this.Component);
+    )(this.Component || Component);
   }
 }
