@@ -1,9 +1,16 @@
-import { registerGlobalActionCreators } from "./reduxion";
+import {
+  registerGlobalActionCreators,
+  registerReducer,
+  getReducers
+} from "./reduxion";
 import stateFilters from "./state-filters";
 import Connection from "./connection";
+import Reducer from "./reducer";
 
 export default {
-  registerGlobalActionCreators
+  registerGlobalActionCreators,
+  registereReducer,
+  getReducers
 };
 
-export { Connection, stateFilters };
+export { Reducer, Connection, stateFilters };

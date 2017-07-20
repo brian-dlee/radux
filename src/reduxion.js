@@ -1,7 +1,35 @@
+import { combineReducers } from "redux";
+import Reducer from "./reducer";
+
 let globalActionCreators = {};
+let registeredReducers = {};
 
 const registerGlobalActionCreators = mapDispatchToProps =>
   (globalActionCreators = { ...globalActionCreators, ...mapDispatchToProps });
+
+const registerReducer = reducer => {
+  if (!reducer instanceof Reducer) {
+    console.error(
+      `registerReducer must be passed an object of type Reducer. ${type(
+        reducer
+      )} provided.`
+    );
+  }
+
+  this.registeredReducers = { ...this.registeredReducers, ...{ reducer } };
+};
+
+const getReducers = () => {
+  const reducers = {};
+
+  Object.keys(this.registeredReducers).map(key => {
+    reducers[key] = this.registeredReducers.getReduxReducer();
+  });
+
+  return combineReducers(reducers);
+};
+
+const buildActionCreator = data => ({ type: fullActionName, ...data });
 
 const buildDispatchToPropsMap = (actionCreators = {}) => dispatch => ({
   actions: bindActionCreators(
@@ -14,7 +42,10 @@ const buildStateToPropsMap = filter => state =>
   filter ? filter.apply(state) : state;
 
 export {
-  registerGlobalActionCreators,
+  buildActionCreator,
   buildDispatchToPropsMap,
-  buildStateToPropsMap
+  buildStateToPropsMap,
+  getReducers,
+  registerGlobalActionCreators,
+  registerReducer
 };
