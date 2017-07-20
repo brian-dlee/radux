@@ -2,7 +2,6 @@ import {
   getReducers,
   reducer,
   registerGlobalActionCreators,
-  registerReducer,
   registerReducers,
   stateConnection
 } from "./radux";
@@ -14,7 +13,6 @@ export default {
   getReducers,
   reducer,
   registerGlobalActionCreators,
-  registerReducer,
   registerReducers,
   stateConnection
 };

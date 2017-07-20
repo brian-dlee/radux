@@ -12,7 +12,7 @@ const reducer = (name, initialState = {}) => new Reducer(name, initialState);
 const registerGlobalActionCreators = mapDispatchToProps =>
   (globalActionCreators = { ...globalActionCreators, ...mapDispatchToProps });
 
-const registerReducer = reducer => {
+const registerReducer = (name, reducer) => {
   if (!reducer instanceof Reducer) {
     console.error(
       `registerReducer must be passed an object of type Reducer. ${type(
@@ -21,10 +21,14 @@ const registerReducer = reducer => {
     );
   }
 
-  this.registeredReducers = { ...this.registeredReducers, ...{ reducer } };
+  this.registeredReducers = {
+    ...this.registeredReducers,
+    ...{ [name]: reducer }
+  };
 };
 
-const registerReducers = reducers => reducers.forEach(r => registerReducer(r));
+const registerReducers = reducers =>
+  Object.keys(reducers).forEach(r => registerReducer(r, reducers[r]));
 
 const getReducers = () => {
   const reducers = {};
@@ -58,7 +62,6 @@ export {
   getReducers,
   reducer,
   registerGlobalActionCreators,
-  registerReducer,
   registerReducers,
   stateConnection
 };
