@@ -65,20 +65,13 @@ const buildActionCreator = actionName => data => ({
 });
 
 const buildDispatchToPropsMap = (actionCreators = {}) => dispatch => {
-  console.log(globalActionCreators);
-  console.log(actionCreators);
-  console.log({
-    ...convertDirectoryNotationToObject(globalActionCreators),
-    ...convertDirectoryNotationToObject(actionCreators)
-  });
+  const boundActionCreators = {
+    ...bindActionCreators(globalActionCreators, dispatch),
+    ...bindActionCreators(actionCreators, dispatch)
+  };
+
   return {
-    actions: bindActionCreators(
-      {
-        ...convertDirectoryNotationToObject(globalActionCreators),
-        ...convertDirectoryNotationToObject(actionCreators)
-      },
-      dispatch
-    )
+    actions: convertDirectoryNotationToObject(boundActionCreators)
   };
 };
 
