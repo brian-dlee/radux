@@ -1,7 +1,5 @@
 import path from "path";
 
-import { buildActionCreator } from "./radux";
-
 const extractSimpleType = type => {
   if (type.includes("/")) {
     return path.basename(type);
@@ -25,44 +23,31 @@ export default class Reducer {
     this.reduceFunctions = {};
   }
 
-  addAction(type, reduceFunction) {
+  addAction(type, createAction, onDispatch) {
+    if (arguments.length < 3) {
+      [type, createAction, onDispatch] = [type, null, createAction];
+    }
+
     const fullActionName = getFullActionName(this.name, type);
-    // const simpleActionName = extractSimpleType(type);
 
-    // if (!this.actionCreators[this.name]) {
-    //   this.actionCreators[this.name] = {};
-    // }
-    //
-    // if (!this.reduceFunctions[this.name]) {
-    //   this.reduceFunctions[this.name] = {};
-    // }
+    this.actionCreators[fullActionName] = (...args) => {
+      return {
+        type,
+        ...(createAction ? createAction(...args) : {})
+      };
+    };
 
-    // this.actionCreators[this.name][simpleActionName] = buildActionCreator(
-    //   fullActionName
-    // );
-    // this.reduceFunctions[this.name][simpleActionName] = reduceFunction;
+    this.reduceFunctions[fullActionName] = onDispatch;
 
-    this.actionCreators[fullActionName] = buildActionCreator(fullActionName);
-    this.reduceFunctions[fullActionName] = reduceFunction;
-  }
-
-  addActions(actions) {
-    Object.keys(actions).forEach(action =>
-      this.addAction(action, actions[action])
-    );
+    return this;
   }
 
   getReduxReducer() {
     return (state = this.initialState, action = {}) => {
-      // const type = extractSimpleType(action.type);
-      //
-      // if (this.reduceFunctions[this.name][type])
-      //   return { ...state, ...this.reduceFunctions[this.name][type]() };
-
       const type = getFullActionName(this.name, action.type);
 
       if (this.reduceFunctions[type])
-        return { ...state, ...this.reduceFunctions[type]() };
+        return { ...state, ...this.reduceFunctions[type](state, action) };
 
       return state;
     };

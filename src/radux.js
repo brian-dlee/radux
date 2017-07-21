@@ -1,6 +1,6 @@
 import { bindActionCreators, combineReducers } from "redux";
 import Reducer from "./reducer";
-import StateConnection from "./state-connection";
+import StateConnector from "./state-connector";
 
 let globalActionCreators = {};
 let registeredReducers = {};
@@ -11,11 +11,17 @@ const convertDirectoryNotationToObject = obj => {
   Object.keys(obj).forEach(key => {
     if (key.includes("/")) {
       const parts = key.split("/");
-      const first = parts.shift();
+      const group = parts.shift();
 
-      newObj[first] = convertDirectoryNotationToObject({
-        [parts.join("/")]: obj[key]
-      });
+      if (!newObj[group]) {
+        newObj[group] = {};
+      }
+
+      if (parts[0].includes("/")) {
+        throw `Action types deeper than two levels is not currently supported. Received ${key}.`;
+      }
+
+      newObj[group][parts.shift()] = obj[key];
     } else {
       newObj[key] = obj[key];
     }
@@ -24,8 +30,8 @@ const convertDirectoryNotationToObject = obj => {
   return newObj;
 };
 
-const stateConnection = (Component, params) =>
-  new StateConnection(Component, params);
+const stateConnector = (Component, params) =>
+  new StateConnector(Component, params);
 const reducer = (name, initialState = {}) => new Reducer(name, initialState);
 
 const registerGlobalActionCreators = mapDispatchToProps =>
@@ -33,11 +39,9 @@ const registerGlobalActionCreators = mapDispatchToProps =>
 
 const registerReducer = (name, reducer) => {
   if (!reducer instanceof Reducer) {
-    console.error(
-      `registerReducer must be passed an object of type Reducer. ${type(
-        reducer
-      )} provided.`
-    );
+    throw `registerReducer must be passed an object of type Reducer. ${type(
+      reducer
+    )} provided.`;
   }
 
   this.registeredReducers = {
@@ -59,16 +63,9 @@ const getReducers = () => {
   return combineReducers(reducers);
 };
 
-const buildActionCreator = actionName => data => ({
-  type: actionName,
-  ...data
-});
-
 const buildDispatchToPropsMap = (actionCreators = {}) => dispatch => {
-  const boundActionCreators = {
-    ...bindActionCreators(globalActionCreators, dispatch),
-    ...bindActionCreators(actionCreators, dispatch)
-  };
+  const combinedCreators = { ...globalActionCreators, ...actionCreators };
+  const boundActionCreators = bindActionCreators(combinedCreators, dispatch);
 
   return {
     actions: convertDirectoryNotationToObject(boundActionCreators)
@@ -79,12 +76,11 @@ const buildStateToPropsMap = filter => state =>
   filter ? filter.apply(state) : state;
 
 export {
-  buildActionCreator,
   buildDispatchToPropsMap,
   buildStateToPropsMap,
   getReducers,
   reducer,
   registerGlobalActionCreators,
   registerReducers,
-  stateConnection
+  stateConnector
 };

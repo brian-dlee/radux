@@ -4,7 +4,7 @@ import { BaseFilter, IncludeFilter, ExcludeFilter } from "./state-filters";
 import { buildDispatchToPropsMap, buildStateToPropsMap } from "./radux";
 import Reducer from "./reducer";
 
-export default class StateConnection {
+export default class StateConnector {
   constructor(Component = null, params = {}) {
     this.Component = Component;
     this.stateFilter = params.stateFilter;
@@ -19,7 +19,7 @@ export default class StateConnection {
   }
 
   addActionCreators(actionCreators) {
-    this.actionCreators = { ...this.actionCreators, actionCreators };
+    this.actionCreators = { ...this.actionCreators, ...actionCreators };
     return this;
   }
 
@@ -48,11 +48,9 @@ export default class StateConnection {
 
   useReducer(reducer) {
     if (!reducer instanceof Reducer) {
-      console.error(
-        `useReducer expects a Reducer to be passed in. ${type(
-          reducer
-        )} received.`
-      );
+      throw `useReducer expects a Reducer to be passed in. ${type(
+        reducer
+      )} received.`;
     }
 
     this.addActionCreators(reducer.actionCreators);
