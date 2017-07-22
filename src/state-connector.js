@@ -7,7 +7,7 @@ import Reducer from "./reducer";
 export default class StateConnector {
   constructor(Component = null, params = {}) {
     this.Component = Component;
-    this.stateFilter = params.stateFilter;
+    this.stateFilter = params.stateFilter || new BaseFilter();
     this.mergeProps = params.mergeProps;
     this.options = params.options || {};
     this.actionCreators = params.actionCreators || {};

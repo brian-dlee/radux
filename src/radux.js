@@ -34,8 +34,8 @@ const stateConnector = (Component, params) =>
   new StateConnector(Component, params);
 const reducer = (name, initialState = {}) => new Reducer(name, initialState);
 
-const registerGlobalActionCreators = mapDispatchToProps =>
-  (globalActionCreators = { ...globalActionCreators, ...mapDispatchToProps });
+const registerGlobalActionCreators = actionCreators =>
+  (globalActionCreators = { ...globalActionCreators, ...actionCreators });
 
 const registerReducer = (name, reducer) => {
   if (!reducer instanceof Reducer) {
