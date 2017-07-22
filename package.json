@@ -1,11 +1,11 @@
 {
   "name": "radux",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Helper library for Redux that helps reduce the repitiveness of Redux configuration for React",
   "main": "./lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "transpile": "babel -d lib/ src/",
+    "transpile": "rm -rf lib/* && babel -d lib/ src/",
     "precommit": "lint-staged && npm run-script transpile"
   },
   "repository": {
