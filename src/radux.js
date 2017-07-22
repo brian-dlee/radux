@@ -1,4 +1,4 @@
-import { bindActionCreators, combineReducers } from "redux";
+import { bindActionCreators, combineReducers, createStore } from "redux";
 
 import Reducer from "./reducer";
 import StateConnector from "./state-connector";
@@ -76,17 +76,18 @@ const registerReducers = reducers =>
   Object.keys(reducers).forEach(r => registerReducer(r, reducers[r]));
 
 /**
- * Returns all registered reducers after they are combined
+ * Returns a store based on all registered reducers
+ * @param {{}} enhancer The store enhancer; See redux createStore documentation.
  * @returns {Reducer<S>}
  */
-const getReducers = () => {
+const getStore = enhancer => {
   const reducers = {};
 
   Object.keys(registeredReducers).map(key => {
     reducers[key] = registeredReducers[key].getReduxReducer();
   });
 
-  return combineReducers(reducers);
+  return createStore(combineReducers(reducers, null, enhancer));
 };
 
 /* ####################################################################
@@ -116,7 +117,7 @@ const buildStateToPropsMap = filter => state =>
 export {
   buildDispatchToPropsMap,
   buildStateToPropsMap,
-  getReducers,
+  getStore,
   reducer,
   registerGlobalActionCreators,
   registerReducers,

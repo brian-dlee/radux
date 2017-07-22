@@ -1,5 +1,5 @@
 import {
-  getReducers,
+  getStore,
   reducer,
   registerGlobalActionCreators,
   registerReducers,
@@ -7,7 +7,7 @@ import {
 } from "./radux";
 
 export default {
-  getReducers,
+  getStore,
   registerGlobalActionCreators,
   registerReducers
 };

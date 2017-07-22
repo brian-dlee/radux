@@ -184,12 +184,12 @@ class App extends Component {
 }
 
 export default connector.connectTo(App);
-````
+```
 **Hook reducers to the global state**
 ```javascript
 // src/index.js 
 import React from "react";
-import radux from "radux";
+import { createStore, registerReducers } from "radux";
 import { Provider } from "react-redux";
 import * as myReducers from "./redux/reducers";
 import App from "./AppContainer";
@@ -197,7 +197,7 @@ import App from "./AppContainer";
 radux.registerReducers(myReducers);
 
 ReactDom.render(
-  <Provider state={createStore(radux.getReducers())}>
+  <Provider state={radux.getStore()}>
     <App />
   </Provider>,
   document.getElementById('root')
