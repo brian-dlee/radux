@@ -1,6 +1,6 @@
 {
   "name": "radux",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Helper library for Redux that helps reduce the repitiveness of Redux configuration for React",
   "main": "./lib/index.js",
   "scripts": {
@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/brian-dlee/reduxion#readme",
   "dependencies": {
+    "babel-preset-es2015": "^6.24.1",
     "react-redux": "^5.0.5",
     "redux": "^3.7.2"
   },
