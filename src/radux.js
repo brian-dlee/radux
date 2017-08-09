@@ -131,7 +131,6 @@ export {
   buildDispatchToPropsMap,
   buildStateToPropsMap,
   getStore,
-  globalStore,
   reducer,
   registerGlobalActionCreators,
   stateConnector
