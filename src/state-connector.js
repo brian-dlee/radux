@@ -20,6 +20,7 @@ export default class StateConnector {
     this.mergeProps = params.mergeProps;
     this.options = params.options || {};
     this.actionCreators = {};
+    this.connectedReducers = [];
   }
 
   /**
@@ -39,9 +40,17 @@ export default class StateConnector {
    * @returns {*}
    */
   connectTo(Component) {
+    const dispatchExtensions = {};
+
+    this.connectedReducers.forEach(r =>
+      Object.keys(r.dispatchExtensions).forEach(
+        type => (dispatchExtensions[type] = r.dispatchExtensions[type])
+      )
+    );
+
     return reduxConnect(
       buildStateToPropsMap(this.stateFilter),
-      buildDispatchToPropsMap(this.actionCreators),
+      buildDispatchToPropsMap(this.actionCreators, dispatchExtensions),
       this.mergeProps,
       this.options
     )(this.Component || Component);
@@ -80,6 +89,7 @@ export default class StateConnector {
       )} received.`;
     }
 
+    this.connectedReducers.push(reducer);
     this.addActionCreators(reducer.actionCreators);
 
     return this;

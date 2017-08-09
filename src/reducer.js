@@ -39,6 +39,7 @@ export default class Reducer {
     this.actionCreators = {};
     this.initialState = initialState;
     this.reduceFunctions = {};
+    this.dispatchExtensions = {};
   }
 
   /**
@@ -99,9 +100,17 @@ export default class Reducer {
     return this;
   }
 
+  addDispatchExtension(type, dispatchExtension) {
+    this.dispatchExtensions[
+      getFullActionName(this.name, type)
+    ] = dispatchExtension;
+
+    return this;
+  }
+
   /**
    * Get function that can be provided to redux combineReducers
-   * @returns {function(state, action)} Retunrs function that accepts
+   * @returns {function(state, action)} Returns function that accepts
    *                                    state and action and returns a mutated state
    *                                    based on the action dispatched
    */

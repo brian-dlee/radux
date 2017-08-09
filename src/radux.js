@@ -80,11 +80,12 @@ const registerReducers = reducers =>
  * @param {{}} enhancer The store enhancer; See redux createStore documentation.
  * @returns {Reducer<S>}
  */
-const getStore = enhancer => {
+const getStore = (newReducers, enhancer) => {
+  const allInputReducers = { ...newReducers, ...registeredReducers };
   const reducers = {};
 
-  Object.keys(registeredReducers).map(key => {
-    reducers[key] = registeredReducers[key].getReduxReducer();
+  Object.keys(allInputReducers).map(key => {
+    reducers[key] = allInputReducers[key].getReduxReducer();
   });
 
   return createStore(combineReducers(reducers, null, enhancer));
@@ -98,9 +99,21 @@ const getStore = enhancer => {
  * Builds mapDispatchToProps argument of Redux connect
  * @param actionCreators
  */
-const buildDispatchToPropsMap = (actionCreators = {}) => dispatch => {
+const buildDispatchToPropsMap = (
+  actionCreators = {},
+  dispatcherExtensions = {}
+) => dispatch => {
   const combinedCreators = { ...globalActionCreators, ...actionCreators };
-  const boundActionCreators = bindActionCreators(combinedCreators, dispatch);
+  const boundActionCreators = {
+    ...bindActionCreators(combinedCreators, dispatch)
+  };
+
+  Object.keys(dispatcherExtensions).map(type => {
+    boundActionCreators[type] = (...args) => {
+      dispatch(actionCreators[type](...args));
+      return dispatcherExtensions[type](dispatch, ...args);
+    };
+  });
 
   return {
     actions: convertDirectoryNotationToObject(boundActionCreators)
@@ -118,8 +131,8 @@ export {
   buildDispatchToPropsMap,
   buildStateToPropsMap,
   getStore,
+  globalStore,
   reducer,
   registerGlobalActionCreators,
-  registerReducers,
   stateConnector
 };
