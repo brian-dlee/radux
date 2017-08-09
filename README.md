@@ -112,7 +112,7 @@ export default class App extends Component {
     );
   }
 }
-````
+```
 **Hook reducers to the global state**
 ```javascript
 // src/index.js 
@@ -125,7 +125,7 @@ import AppContainer from "./AppContainer";
 const combinedReducers = combinedReducers(myReducers);
 
 ReactDom.render(
-  <Provider state={createStore(combinedReducers)}>
+  <Provider store={createStore(combinedReducers)}>
     <AppContainer />
   </Provider>,
   document.getElementById('root')
@@ -189,13 +189,13 @@ export default connector.connectTo(App);
 ```javascript
 // src/index.js 
 import React from "react";
-import { getStore } from "radux";
+import radux from "radux";
 import { Provider } from "react-redux";
 import * as myReducers from "./reducers";
 import App from "./AppContainer";
 
 ReactDom.render(
-  <Provider state={radux.getStore(myReducers)}>
+  <Provider store={radux.getStore(myReducers)}>
     <App />
   </Provider>,
   document.getElementById('root')

@@ -84,6 +84,8 @@ const getStore = (newReducers, enhancer) => {
   const allInputReducers = { ...newReducers, ...registeredReducers };
   const reducers = {};
 
+  registerReducers(newReducers);
+
   Object.keys(allInputReducers).map(key => {
     reducers[key] = allInputReducers[key].getReduxReducer();
   });
