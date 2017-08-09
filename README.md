@@ -191,7 +191,7 @@ export default connector.connectTo(App);
 import React from "react";
 import { getStore } from "radux";
 import { Provider } from "react-redux";
-import * as myReducers from "./redux/reducers";
+import * as myReducers from "./reducers";
 import App from "./AppContainer";
 
 ReactDom.render(
