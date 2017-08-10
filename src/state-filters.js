@@ -11,6 +11,8 @@ class BaseFilter {
     this.keys = keys || [];
     this.tests = [];
     this.registerTests();
+
+    return this;
   }
 
   /**
@@ -56,12 +58,34 @@ class IncludeFilter extends BaseFilter {
 }
 
 /**
- * Filter which excludes all keys provided
+ * Allows all state keys
  */
-class ExcludeFilter extends BaseFilter {
+class PermissiveFilter extends BaseFilter {
+  registerTests() {
+    this.tests.push(k => true);
+  }
+}
+
+/**
+ * Allow only the global and set reducer state key
+ */
+class RestrictiveFilter extends BaseFilter {
   registerTests() {
     super.registerTests();
-    this.tests.push(k => !this.keys.includes(k));
+    this.tests.push(k => false);
+  }
+}
+
+/**
+ * Allows customization of keys
+ * @callback testFunc Performs filter on state
+ * @param {String} key State key being examined
+ * @return {boolean} A result of true means the key should be kept in the resulting state
+ */
+class CustomFilter extends BaseFilter {
+  registerTests(testFunc) {
+    this.tests.push(k => testFunc(k));
+    return this;
   }
 }
 
@@ -70,11 +94,17 @@ class ExcludeFilter extends BaseFilter {
  * @param keys
  */
 const include = keys => new IncludeFilter(keys);
-const exclude = keys => new ExcludeFilter(keys);
+const custom = func => new CustomFilter().registerTests(func);
 
 export default {
-  include,
-  exclude
+  custom,
+  include
 };
 
-export { BaseFilter, IncludeFilter, ExcludeFilter };
+export {
+  BaseFilter,
+  CustomFilter,
+  IncludeFilter,
+  PermissiveFilter,
+  RestrictiveFilter
+};

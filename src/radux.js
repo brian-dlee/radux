@@ -80,15 +80,18 @@ const registerReducers = reducers =>
  * @param {{}} enhancer The store enhancer; See redux createStore documentation.
  * @returns {Reducer<S>}
  */
-const getStore = (newReducers, enhancer) => {
+const getStore = (newReducers = {}, enhancer = null) => {
   const allInputReducers = { ...newReducers, ...registeredReducers };
-  const reducers = {};
 
   registerReducers(newReducers);
 
-  Object.keys(allInputReducers).map(key => {
-    reducers[key] = allInputReducers[key].getReduxReducer();
-  });
+  const reducers = Object.keys(allInputReducers).reduce(
+    (result, key) => ({
+      ...result,
+      [key]: allInputReducers[key].getReduxReducer()
+    }),
+    {}
+  );
 
   return createStore(combineReducers(reducers, null, enhancer));
 };
@@ -126,8 +129,11 @@ const buildDispatchToPropsMap = (
  * Builds mapStateToProps argument of Redux connect
  * @param filter
  */
-const buildStateToPropsMap = filter => state =>
-  filter ? filter.apply(state) : state;
+const buildStateToPropsMap = filters => state =>
+  filters.reduce(
+    (newState, filter) => ({ ...newState, ...filter.apply(state) }),
+    {}
+  );
 
 export {
   buildDispatchToPropsMap,

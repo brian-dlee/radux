@@ -1,6 +1,13 @@
 import { connect as reduxConnect } from "react-redux";
 
-import { BaseFilter, IncludeFilter, ExcludeFilter } from "./state-filters";
+import {
+  BaseFilter,
+  CustomFilter,
+  IncludeFilter,
+  ExcludeFilter,
+  PermissiveFilter,
+  RestrictiveFilter
+} from "./state-filters";
 import { buildDispatchToPropsMap, buildStateToPropsMap } from "./radux";
 import Reducer from "./reducer";
 
@@ -16,7 +23,7 @@ export default class StateConnector {
    */
   constructor(Component = null, params = {}) {
     this.Component = Component;
-    this.stateFilter = params.stateFilter || new BaseFilter();
+    this.stateFilters = [params.stateFilter || new RestrictiveFilter()];
     this.mergeProps = params.mergeProps;
     this.options = params.options || {};
     this.actionCreators = {};
@@ -42,14 +49,14 @@ export default class StateConnector {
   connectTo(Component) {
     const dispatchExtensions = {};
 
-    this.connectedReducers.forEach(r =>
+    this.connectedReducers.forEach(r => {
       Object.keys(r.dispatchExtensions).forEach(
         type => (dispatchExtensions[type] = r.dispatchExtensions[type])
-      )
-    );
+      );
+    });
 
     return reduxConnect(
-      buildStateToPropsMap(this.stateFilter),
+      buildStateToPropsMap(this.stateFilters),
       buildDispatchToPropsMap(this.actionCreators, dispatchExtensions),
       this.mergeProps,
       this.options
@@ -59,22 +66,49 @@ export default class StateConnector {
   /**
    * Configures what part of the state is kept when passing into Components state
    * Similar to mapStateToProps in Redux; Ultimately that's what this will configure
-   * @param filter Array of state keys or Radux filter object
-   * @param type Type of filter (include or exclude)
+   * @param {String[]|function|String|StateFilter} filter Array of state keys to include,
+   *                                                      function returning true when a state key should be kept,
+   *                                                      "permissive" to preserve all state keys,
+   *                                                      or a radux state filter object
    * @returns {this} Returns this for chaining purposes
    */
-  setStateFilter(filter, type = null) {
-    if (filter instanceof BaseFilter) {
-      this.stateFilter = filter;
-    } else if (type === "include") {
-      this.stateFilter = new IncludeFilter(filter);
-    } else if (type === "exclude") {
-      this.stateFilter = new ExcludeFilter(filter);
-    } else {
-      this.stateFilter = new BaseFilter(filter);
+  addStateFilter(filter) {
+    let newFilter = filter;
+
+    if (!filter instanceof BaseFilter) {
+      if (typeof filter === "function") {
+        newFilter = new CustomFilter(filter);
+      } else if (filter === "permissive") {
+        newFilter = new PermissiveFilter();
+      } else {
+        newFilter = new IncludeFilter(filter);
+      }
     }
 
+    if (newFilter instanceof BaseFilter === false) {
+      throw "Invalid filter provided to reducer.addStateFilter. Recieved object of type " +
+        typeof newFilter;
+    }
+
+    this.stateFilters.push(newFilter);
+
     return this;
+  }
+
+  /**
+   * Deprecated! Use addStateFilter instead
+   * @param {String[]|Filter} filter Array of state keys or Radux filter object
+   * @returns {this} Returns this for chaining purposes
+   */
+  setStateFilter(filter) {
+    try {
+      console.warn(
+        "DEPRECATED: Use addStateFilter instead of setStateFilter. " +
+          "reducer.setStateFilter will be removed in later versions of radux."
+      );
+    } catch (e) {}
+
+    return this.addStateFilter(filter);
   }
 
   /**
@@ -91,6 +125,7 @@ export default class StateConnector {
 
     this.connectedReducers.push(reducer);
     this.addActionCreators(reducer.actionCreators);
+    this.addStateFilter(new IncludeFilter([reducer.name]));
 
     return this;
   }
