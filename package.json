@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/brian-dlee/reduxion.git"
+    "url": "git+https://github.com/brian-dlee/radux.git"
   },
   "keywords": [
     "redux",
@@ -21,9 +21,9 @@
   "author": "Brian Lee <briandl92391@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/brian-dlee/reduxion/issues"
+    "url": "https://github.com/brian-dlee/radux/issues"
   },
-  "homepage": "https://github.com/brian-dlee/reduxion#readme",
+  "homepage": "https://github.com/brian-dlee/radux#readme",
   "dependencies": {
     "babel-preset-es2015": "^6.24.1",
     "react-redux": "^5.0.5",
