@@ -150,10 +150,10 @@ export default reducer("app", initialState)
 **Expose Reducer**
 ```javascript
 // src/reducers/index.js 
-import appReducer from "./app";
+import app from "./app";
 
 export {
-  app: appReducer
+  app
 };
 ```
 **Write your component**
@@ -166,9 +166,6 @@ import { stateConnector } from "radux";
 import React, { Component }  from "react";
 
 import appReducer from "./reducers/app";
-
-const connector = stateConnector();
-connector.useReducer(appReducer);
 
 class App extends Component {
   render() {
@@ -183,7 +180,9 @@ class App extends Component {
   }
 }
 
-export default connector.connectTo(App);
+export default stateConnector()
+  .useReducer(appReducer)
+  .connectTo(App);
 ```
 **Hook reducers to the global state**
 ```javascript
@@ -191,7 +190,7 @@ export default connector.connectTo(App);
 import React from "react";
 import radux from "radux";
 import { Provider } from "react-redux";
-import * as myReducers from "./reducers";
+import myReducers from "./reducers";
 import App from "./AppContainer";
 
 ReactDom.render(
