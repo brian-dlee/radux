@@ -8,13 +8,13 @@ Radux aims to ease the process while enforcing some opiniated configuration so
 Redux powered applications and their patterns/configurations are more recognizeable.
 
 > _Caution: At this point I wouldn't recommend this package for beginners. This package
-abstracts some of Redux and parts could feel like "magic" if you are not very familiar
-with Redux. At this point, this package is intended for those of us that are more familiar
-with Redux and want to reduce the configuration required to get running and hook new components
-to the global state._
+> abstracts some of Redux and parts could feel like "magic" if you are not very familiar
+> with Redux. At this point, this package is intended for those of us that are more familiar
+> with Redux and want to reduce the configuration required to get running and hook new components
+> to the global state._
 
-To reiterate, if you are not familiar with Redux you should first become familiar with how
-Redux works.
+To reiterate, if you are not familiar with Redux **you should first become familiar with how
+Redux works before using this package**.
 
 ## Installing Radux
 We all know this part. To install Radux, use your favorite Node package manager.
@@ -25,41 +25,41 @@ npm install --save radux
 **Create Actions**
 ```javascript
 // src/redux/actions/app.js 
-const MY_ACTION = 'myAction'; 
+const ADD = 'app/add'; 
 
 export {
-  MY_ACTION,
+  ADD,
 };
 ```
 **Create Action Creators**
 ```javascript
 // src/redux/action-creators/app.js 
-import MY_ACTION from "../actions/app";
+import ADD from "../actions/app";
 
 const doMyAction = value => {
   return {
-    type: MY_ACTION,
+    type: ADD,
     value
   };
 };
 
 export {
-  doMyAction
+  doAdd
 };
 ```
 **Create Reducer**
 ```javascript
 // src/redux/reducers/app.js 
-import MY_ACTION from '../actions/app.js';
+import ADD from '../actions/app.js';
 
 const initialState = {
-  value: 1,
+  value: 0,
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case MY_ACTION:
-      return {...state, value: action.value}
+    case ADD:
+      return {...state, value: state.value + action.value}
     default:
       return state;
   }
@@ -68,10 +68,10 @@ export default (state = initialState, action) => {
 **Expose Reducer**
 ```javascript
 // src/redux/reducers/index.js 
-import appReducer from "./app";
+import app from "./app";
 
 export {
-  app: appReducer
+  app
 };
 ```
 **Create container to map state and dispatchers to Component**
@@ -88,7 +88,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return { 
     actions: {
-      doMyAction: value => dispatch(actionCreators.doMyAction(value))
+      doAdd: value => dispatch(actionCreators.doAdd(value))
     }
   }
 };
@@ -101,11 +101,12 @@ export default connect(mapStateToProps, mapDispatchToProps)(App);
 import React, { Component }  from "react";
 
 export default class App extends Component {
+  increment = () => this.props.actions.doAdd(1);
   render() {
     return (
       <div>
         <p>Value: {this.props.app.value}</p>
-        <button onClick={this.props.actions.doMyAction(this.props.app.value + 1)}>
+        <button onClick={this.increment}>
           Increment
         </button>
       </div>
@@ -144,8 +145,8 @@ const initialState = {
 };
 
 export default reducer("app", initialState)
-  .addAction("myAction", value => ({ value }),
-    (state, action) => ({...state, value: action.value}))
+  .addAction("add", value => ({ value }),
+    (state, action) => ({...state, value: state.value + action.value}))
 ```
 **Expose Reducer**
 ```javascript
@@ -168,11 +169,12 @@ import React, { Component }  from "react";
 import appReducer from "./reducers/app";
 
 class App extends Component {
+  increment = () => this.props.actions.app.add(1);
   render() {
     return (
       <div>
         <p>Value: {this.props.app.value}</p>
-        <button onClick={this.props.actions.app.myAction(this.props.app.value + 1)}>
+        <button onClick={this.increment}>
           Increment
         </button>
       </div>
