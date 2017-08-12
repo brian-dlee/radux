@@ -19,9 +19,7 @@ class BaseFilter {
    * Register tests for filter
    * This should be extended in all other filter classes
    */
-  registerTests() {
-    this.tests.push(k => /^globals?$/i.test(k));
-  }
+  registerTests() {}
 
   /**
    * Perform test on top-level state key
@@ -52,8 +50,8 @@ class BaseFilter {
  */
 class IncludeFilter extends BaseFilter {
   registerTests() {
-    super.registerTests();
     this.tests.push(k => this.keys.includes(k));
+    return this;
   }
 }
 
@@ -63,6 +61,7 @@ class IncludeFilter extends BaseFilter {
 class PermissiveFilter extends BaseFilter {
   registerTests() {
     this.tests.push(k => true);
+    return this;
   }
 }
 
@@ -71,8 +70,8 @@ class PermissiveFilter extends BaseFilter {
  */
 class RestrictiveFilter extends BaseFilter {
   registerTests() {
-    super.registerTests();
     this.tests.push(k => false);
+    return this;
   }
 }
 

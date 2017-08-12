@@ -1,14 +1,20 @@
 import {
+  addStore,
+  addNamedStore,
+  dispatch,
   getStore,
   reducer,
-  registerGlobalActionCreators,
+  registerGlobalReducer,
   registerReducers,
   stateConnector
 } from "./radux";
 
 export default {
+  addStore,
+  addNamedStore,
+  dispatch,
   getStore,
-  registerGlobalActionCreators,
+  registerGlobalReducer,
   registerReducers
 };
 

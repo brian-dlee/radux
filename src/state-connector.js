@@ -75,7 +75,7 @@ export default class StateConnector {
   addStateFilter(filter) {
     let newFilter = filter;
 
-    if (!filter instanceof BaseFilter) {
+    if (filter instanceof BaseFilter === false) {
       if (typeof filter === "function") {
         newFilter = new CustomFilter(filter);
       } else if (filter === "permissive") {
@@ -113,7 +113,7 @@ export default class StateConnector {
 
   /**
    * Registers all actions that have been registered with the Reducer
-   * @param Reducer A reducer object
+   * @param reducer A reducer object
    * @returns {this} Returns this for chaining purposes
    */
   useReducer(reducer) {
