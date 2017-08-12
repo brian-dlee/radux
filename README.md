@@ -236,7 +236,7 @@ import myReducers from "./reducers";
 import App from "./AppContainer";
 
 ReactDom.render(
-  <Provider store={radux.getStore(myReducers)}>
+  <Provider store={radux.addStore(myReducers)}>
     <App />
   </Provider>,
   document.getElementById('root')
