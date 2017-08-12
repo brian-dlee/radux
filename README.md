@@ -16,10 +16,50 @@ Redux powered applications and their patterns/configurations are more recognizea
 To reiterate, if you are not familiar with Redux **you should first become familiar with how
 Redux works before using this package**.
 
+## Changelog
+### v0.6.0
+> **Caution: Includes breaking changes (see below)**
+
+#### Feature additions
+1. Implemented named stores to allow the splitting of stores into smaller pieces
+2. Implemented retrieval of stores to manually dispatch actions
+
+This is especially usable in cases of Middleware actions (e.g. react-router-redux)
+Added helper method "dispatch" which accepts an optional store name and an action
+In react-router-redux, the following snippet can be used to programmatically navigate
+
+```javascript
+import radux from 'radux';
+import { push } from 'react-router-redux'; //react-router-redux@next (currently in alpha)
+
+radux.dispatch(push('/myPath'))
+// or
+radux.getStore().dispatch(push('/myPath'))
+
+// or for named stores
+
+radux.dispatch('special', push('/myPath'))
+// or
+radux.getStore('special').dispatch(push('/myPath'))
+```
+
+#### Breaking changes
+- `getStore` now only takes a single argument "storeName"
+  - use `addStore` for the old functionality of `getStore`; this can actually
+  replace your old `getStore` calls
+  - use `addNamedStore` to implement multiple stores
+- `registerGlobalActionCreators` has been changed to `registerGlobalReducer` where a reducer should be supplied
+
+#### Bug fixes
+- sending in enhancers or middleware into `addStore` (previously `getStore`) should now work where it did not previously build Redux store correctly
+- Adjusted filter check for String filters (named filters); specifically the "permissive" filter
+
 ## Installing Radux
 We all know this part. To install Radux, use your favorite Node package manager.
 ```shell
 npm install --save radux
+// or
+yarn add radux
 ```
 ## Exhibit A: The Redux model
 **Create Actions**
@@ -36,7 +76,7 @@ export {
 // src/redux/action-creators/app.js 
 import ADD from "../actions/app";
 
-const doMyAction = value => {
+const doAdd = value => {
   return {
     type: ADD,
     value
