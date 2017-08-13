@@ -33,6 +33,9 @@ const stateConnector = (Component, params) =>
  Radux global store storage
  ####################################################################### */
 
+// Default store key
+const DEFAULT = "default";
+
 /**
  * Radux global store object
  * @type {{}}
@@ -135,7 +138,7 @@ const addNamedStore = (
  * @returns {Store<S>}
  */
 const addStore = (...args) => {
-  return addNamedStore("default", ...args);
+  return addNamedStore(DEFAULT, ...args);
 };
 
 /**
@@ -144,11 +147,11 @@ const addStore = (...args) => {
  * @returns {Store<S>}
  */
 const getStore = storeName => {
-  return stores[storeName || "default"];
+  return stores[storeName || DEFAULT];
 };
 
 const dispatch = (storeName, action) => {
-  if (arguments.length < 2) [storeName, action] = [null, storeName];
+  if (!action) [storeName, action] = [null, storeName];
   return getStore(storeName).dispatch(action);
 };
 
