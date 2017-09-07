@@ -9,7 +9,7 @@ import Reducer from "./reducer";
 import StateConnector from "./state-connector";
 import { convertDirectoryNotationToObject } from "./utils";
 
-/* ####################################################################
+/* #####################################################################
  Publicly exposed functional adapters for Radux components
  ####################################################################### */
 
@@ -29,7 +29,7 @@ const reducer = (name, initialState = {}) => new Reducer(name, initialState);
 const stateConnector = (Component, params) =>
   new StateConnector(Component, params);
 
-/* ####################################################################
+/* #####################################################################
  Radux global store storage
  ####################################################################### */
 
@@ -42,27 +42,27 @@ const DEFAULT = "default";
  */
 const stores = {};
 
-/* ####################################################################
+/* #####################################################################
  Radux global action creator registration
  ####################################################################### */
 
 /**
- * Radux package store for globally registered action creators
+ * Radux package store for globally registered reducers
  * @type {{}}
  */
-let globalActionCreators = {};
+let globalReducers = {};
 
 /**
  * Register action creators that will register with every radux connected Component
  * @param reducer {Reducer} A Radux reducer
  */
 const registerGlobalReducer = reducer =>
-  (globalActionCreators = {
-    ...globalActionCreators,
-    [reducer.name]: reducer.actionCreators
+  (globalReducers = {
+    ...globalReducers,
+    [reducer.name]: reducer
   });
 
-/* ####################################################################
+/* #####################################################################
  Radux Reducer registration and retrieval
  ####################################################################### */
 
@@ -74,46 +74,59 @@ let registeredReducers = {};
 
 /**
  * Register reducer with radux - when getting the combined reducer all registered reducers will be in the result
- * @param name
- * @param reducer
+ * @param name {String} Name of the reducer; Used as namespace for all actions dispatchers and props
+ * @param reducer {Reducer} Radux Reducer object
+ * @param storeName {String} Optional store name; default store name is used if omitted
  */
-const registerReducer = (name, reducer) => {
+const registerReducer = (name, reducer, storeName = DEFAULT) => {
   if (!reducer instanceof Reducer) {
     throw `registerReducer must be passed an object of type Reducer. ${type(
       reducer
     )} provided.`;
   }
 
-  registeredReducers = {
-    ...registeredReducers,
+  registeredReducers[storeName] = {
+    ...registeredReducers[storeName],
     ...{ [name]: reducer }
   };
 };
 
 /**
  * Bulk reducer registration
- * @param reducers
+ * @param reducers {{Reducer}} Object of {name: reducer} pairs; See registerReducer for more details
+ * @param storeName {String} Optional store name; default store name is used if omitted
  */
-const registerReducers = reducers =>
-  Object.keys(reducers).forEach(r => registerReducer(r, reducers[r]));
+const registerReducers = (reducers, storeName = DEFAULT) =>
+  Object.keys(reducers).forEach(r =>
+    registerReducer(r, reducers[r], storeName)
+  );
 
 /**
  * Adds and returns a store based on all registered reducers
- * @returns {Store<S>}
+ * @returns {Store} Redux store object
  * @param storeName {String} Store name
- * @param newReducers {Reducer<S>} Radux or Redux Reducers used to create store
+ * @param newReducers {{Reducer}} Radux or Redux Reducers used to create store
  * @param storeInitialState {{}} Initial state for store
  * @param enhancers {{}} Enhancers (must be accepted by Redux.applyMiddleware)
  */
 const addNamedStore = (
   storeName,
-  newReducers,
-  storeInitialState,
+  newReducers = {},
+  storeInitialState = {},
   ...enhancers
 ) => {
-  const reducers = { ...newReducers, ...registeredReducers };
+  const reducers = {
+    ...globalReducers,
+    ...(registeredReducers[storeName] || {}),
+    ...newReducers
+  };
 
-  registerReducers(newReducers);
+  // Register any passed Radux Reducers
+  Object.keys(newReducers).forEach(
+    key =>
+      newReducers[key] instanceof Reducer &&
+      registerReducer(key, newReducers[key], storeName)
+  );
 
   /*
      If any are not Radux reducers then assume they are
@@ -168,7 +181,12 @@ const buildDispatchToPropsMap = (
   actionCreators = {},
   dispatcherExtensions = {}
 ) => dispatch => {
-  const combinedCreators = { ...globalActionCreators, ...actionCreators };
+  const combinedCreators = {
+    ...Object.keys(globalReducers).reduce((ac, reducerName) => {
+      return { ...ac, ...globalReducers[reducerName] };
+    }, {}),
+    ...actionCreators
+  };
   const boundActionCreators = {
     ...bindActionCreators(combinedCreators, dispatch)
   };
@@ -189,14 +207,14 @@ const buildDispatchToPropsMap = (
  * Builds mapStateToProps argument of Redux connect
  * @param filters [BaseFilter] An array of filters to apply
  */
-const buildStateToPropsMap = filters => state => {
+const buildStateToPropsMap = (filters = []) => state => {
   const newState = filters.reduce(
     (newState, filter) => ({ ...newState, ...filter.apply(state) }),
     {}
   );
 
   /* Always allow our global registered reducers */
-  return Object.keys(globalActionCreators).reduce(
+  return Object.keys(globalReducers).reduce(
     (finalState, key) => ({ ...finalState, [key]: state[key] }),
     newState
   );
@@ -211,5 +229,6 @@ export {
   getStore,
   reducer,
   registerGlobalReducer,
+  registerReducers,
   stateConnector
 };

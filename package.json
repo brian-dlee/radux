@@ -1,6 +1,6 @@
 {
   "name": "radux",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "Helper library for Redux that helps reduce the repitiveness of Redux configuration for React",
   "main": "./lib/index.js",
   "scripts": {
@@ -32,15 +32,28 @@
   "devDependencies": {
     "babel": "^6.23.0",
     "babel-cli": "^6.24.1",
+    "babel-jest": "^21.0.0",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-preset-react": "^6.24.1",
+    "enzyme": "^2.9.1",
     "husky": "^0.14.3",
+    "jest": "^21.0.1",
     "lint-staged": "^4.0.2",
-    "prettier": "^1.5.3"
+    "prettier": "^1.5.3",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-test-renderer": "^15.6.1"
   },
   "lint-staged": {
     "*.js": [
       "prettier --write",
       "git add"
     ]
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "transform": {
+      ".*": "<rootDir>/node_modules/babel-jest"
+    }
   }
 }
