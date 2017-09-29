@@ -178,7 +178,7 @@ ReactDom.render(
 These are now all included in the Reducer
 ```javascript
 // src/reducers/app.js 
-import { reducer } from "redux";
+import { reducer } from "radux";
 
 const initialState = {
   value: 0
